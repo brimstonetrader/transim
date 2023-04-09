@@ -17,7 +17,7 @@ public class TimeClock : MonoBehaviour
     public Button slowDown;
 
     private bool isTimer = false;
-    private float timer = 0.0f;
+    public float timer = 0.0f;
     private float timerSpeed = 1.0f;
     [SerializeField]
     private int days = 0;
