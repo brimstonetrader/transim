@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,13 +8,46 @@ using UnityEngine;
 
 public class FSM_Human : MonoBehaviour
 {
+    public Rigidbody rigidbody;
+    public SpriteRenderer spriteRenderer;
     BaseState currentState;
+    public float duration = 5;
+    public int c = 0;
+    private float r = 0;
+
 
     void Start()
     {
         currentState = GetInitialState();
         if (currentState != null)
             currentState.Enter();
+            Switch(); 
+    }
+
+    IEnumerator Switch() {
+        if (c<5) {
+            c++;
+            print(c);
+            yield return new WaitForSeconds(1f);
+            Switch();
+        }
+        else {
+            c -= 5;
+            r = UnityEngine.Random.Range(1, 3);
+            if (r == 1) {
+                ChangeState(new BaseState("Home", this));
+                Switch();
+            }
+            else if (r == 2) {
+                ChangeState(new BaseState("Work", this));
+                Switch();
+            }
+            else {
+                ChangeState(new BaseState("Vibe", this));
+                Switch();
+            }
+        }
+        
     }
 
     void Update()
@@ -30,11 +64,37 @@ public class FSM_Human : MonoBehaviour
 
     public void ChangeState(BaseState newState)
     {
-        currentState.Exit();
-
-        currentState = newState;
-        currentState.Enter();
+        if (newState.name == "Home") {
+            LerpPosition(new Vector2(1,0), new BaseState("Home", this));
+        }
+        if (newState.name == "Work") {
+            LerpPosition(new Vector2(0,1), new BaseState("Work", this));
+        }
+        if (newState.name == "Vibe") {
+            LerpPosition(new Vector2(1,1), new BaseState("Vibe", this));
+        }
     }
+
+    IEnumerator LerpPosition(Vector2 targetPosition, BaseState newState)
+    {
+        float time = 0;
+        Vector2 startPosition = transform.position;
+        currentState.Exit();
+        currentState = new BaseState("Flux", this);
+        currentState.Enter();
+        while (time < duration)
+        {
+            transform.position = Vector2.Lerp(startPosition, targetPosition, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = targetPosition;
+        currentState.Exit();
+        currentState = new BaseState(newState.name, this);
+        currentState.Enter();
+        
+    }
+
 
     protected virtual BaseState GetInitialState()
     {

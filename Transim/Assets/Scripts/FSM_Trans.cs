@@ -13,8 +13,6 @@ public class FSM_Trans : FSM_Human
     [HideInInspector]
     public Work workState;
 
-    public Rigidbody rigidbody;
-    public SpriteRenderer spriteRenderer;
     public float speed = 4f;
 
     private void Awake()
