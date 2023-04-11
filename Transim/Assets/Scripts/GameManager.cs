@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour
     
     }
     public void ChangeScene(string scene){
+        print("changing scene");
         StartCoroutine(LoadYourAsyncScene(scene));
     }
 
