@@ -29,6 +29,7 @@ public class TimeClock : MonoBehaviour
     {
         isTimer = true;
         DisplayTime();
+        print("Creating timer");
     }
 
     // Update is called once per frame
@@ -38,6 +39,7 @@ public class TimeClock : MonoBehaviour
         {
             timer += Time.deltaTime * timerSpeed;
             DisplayTime();
+            print("Timer Speed" + timerSpeed);
         }
     }
 
@@ -63,12 +65,14 @@ public class TimeClock : MonoBehaviour
 
     public void SpeedingUp()
     {
-        timerSpeed = 3.0f;
+        timerSpeed = 10000.0f;
+        print("Speeding UP");
     }
 
     public void SlowingDown()
     {
         timerSpeed = 0.25f;
+        print("Slowing DOWN");
     }
 
 }
