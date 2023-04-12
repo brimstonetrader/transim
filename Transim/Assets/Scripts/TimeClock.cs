@@ -21,6 +21,9 @@ public class TimeClock : MonoBehaviour
     private float timerSpeed = 1.0f;
     [SerializeField]
     private int days = 0;
+    private int r = 0;
+
+    public FSM_Human fsm;
 
 
 
@@ -41,6 +44,8 @@ public class TimeClock : MonoBehaviour
             DisplayTime();
             print("Timer Speed" + timerSpeed);
         }
+        if (timer > 20) { StartCoroutine(fsm.Switch()); }
+
     }
 
     void DisplayTime() 
@@ -65,7 +70,7 @@ public class TimeClock : MonoBehaviour
 
     public void SpeedingUp()
     {
-        timerSpeed = 10000.0f;
+        timerSpeed = 4.0f;
         print("Speeding UP");
     }
 

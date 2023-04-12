@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 322337175651625650}
   - component: {fileID: 322337175651625655}
   - component: {fileID: -6732666542043505730}
-  - component: {fileID: 7878131465029460695}
   - component: {fileID: 8399633052629081443}
-  - component: {fileID: 1879604365452104530}
+  - component: {fileID: 7795045325233362456}
   m_Layer: 0
   m_Name: Human
   m_TagString: Untagged
@@ -65,18 +64,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7878131465029460695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 322337175651625654}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51dc8643eed29bc4e972152a22836810, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &8399633052629081443
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -129,7 +116,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1879604365452104530
+--- !u!114 &7795045325233362456
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,9 +125,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 322337175651625654}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9acba298ab458d2448afa0b820d6c5c6, type: 3}
+  m_Script: {fileID: 11500000, guid: 51dc8643eed29bc4e972152a22836810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: -6732666542043505730}
   spriteRenderer: {fileID: 8399633052629081443}
-  speed: 4
+  duration: 5
+  c: 0
+  clock: {fileID: 0}

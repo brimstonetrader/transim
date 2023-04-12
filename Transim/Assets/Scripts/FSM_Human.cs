@@ -1,3 +1,4 @@
+using System.Net.WebSockets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ public class FSM_Human : MonoBehaviour
     public Rigidbody rigidbody;
     public SpriteRenderer spriteRenderer;
     BaseState currentState;
+
     public float duration = 5;
     public int c = 0;
     private float r = 0;
@@ -21,34 +23,7 @@ public class FSM_Human : MonoBehaviour
         currentState = GetInitialState();
         if (currentState != null)
             currentState.Enter();
-            Switch(); 
-    }
-
-    IEnumerator Switch() {
-        if (c<5) {
-            c++;
-            print(c);
-            yield return new WaitForSeconds(1f);
-            Switch();
         }
-        else {
-            c -= 5;
-            r = UnityEngine.Random.Range(1, 3);
-            if (r == 1) {
-                ChangeState(new BaseState("Home", this));
-                Switch();
-            }
-            else if (r == 2) {
-                ChangeState(new BaseState("Work", this));
-                Switch();
-            }
-            else {
-                ChangeState(new BaseState("Vibe", this));
-                Switch();
-            }
-        }
-        
-    }
 
     void Update()
     {
@@ -60,6 +35,22 @@ public class FSM_Human : MonoBehaviour
     {
         if (currentState != null)
             currentState.UpdatePhysics();
+    }
+
+    public IEnumerator Switch() {
+        r = UnityEngine.Random.Range(1, 3);
+        if (r == 1) {
+            ChangeState(new BaseState("Home", this));
+            yield return new WaitForSeconds(0.1f);
+        }
+        else if (r == 2) {
+            ChangeState(new BaseState("Work", this));
+            yield return new WaitForSeconds(0.1f);
+        }
+        else {
+            ChangeState(new BaseState("Vibe", this));
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 
     public void ChangeState(BaseState newState)
