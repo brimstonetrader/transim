@@ -15,10 +15,11 @@ public class TimeClock : MonoBehaviour
 
     public Button speedUp;
     public Button slowDown;
+    public Button normal;
 
     private bool isTimer = false;
     public float timer = 0.0f;
-    private float timerSpeed = 1.0f;
+    private float timerSpeed = 100.0f;
     [SerializeField]
     private int days = 0;
 
@@ -65,14 +66,20 @@ public class TimeClock : MonoBehaviour
 
     public void SpeedingUp()
     {
-        timerSpeed = 10000.0f;
+        timerSpeed = 1000.0f;
         print("Speeding UP");
     }
 
     public void SlowingDown()
     {
-        timerSpeed = 0.25f;
+        timerSpeed = 50.00f;
         print("Slowing DOWN");
+    }
+
+    public void Normal()
+    {
+        timerSpeed = 100.00f;
+        print("Normal");
     }
 
 }
