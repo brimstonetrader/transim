@@ -45,7 +45,6 @@ public class TimeClock : MonoBehaviour
             DisplayTime();
             print("Timer Speed" + timerSpeed);
         }
-        if (timer > 20) { StartCoroutine(fsm.Switch()); }
 
     }
 
@@ -71,19 +70,18 @@ public class TimeClock : MonoBehaviour
 
     public void SpeedingUp()
     {
-        timerSpeed = 4.0f;
+        timerSpeed *= 2.0f;
         print("Speeding UP");
     }
 
     public void SlowingDown()
     {
-        timerSpeed = 50.00f;
+        timerSpeed *= 0.5f;
         print("Slowing DOWN");
     }
 
     public void Normal()
     {
-        timerSpeed = 100.00f;
         print("Normal");
     }
 
