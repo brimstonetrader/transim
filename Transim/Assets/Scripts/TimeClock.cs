@@ -24,9 +24,6 @@ public class TimeClock : MonoBehaviour
     private int days = 0;
     private int r = 0;
 
-    public FSM_Human fsm;
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -45,7 +42,6 @@ public class TimeClock : MonoBehaviour
             DisplayTime();
             print("Timer Speed" + timerSpeed);
         }
-
     }
 
     void DisplayTime() 
@@ -58,6 +54,7 @@ public class TimeClock : MonoBehaviour
         int hours = Mathf.FloorToInt(timer / (60.0f * 60.0f));
         int minutes = Mathf.FloorToInt(timer / 60.0f - hours * 60);
         int seconds = Mathf.FloorToInt(timer - minutes * 60 - hours * 60.0f * 60.0f);
+        int seconds2 = seconds;
 
         if (hours > 12)
             hours -= 12;
