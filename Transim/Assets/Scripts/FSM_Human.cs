@@ -17,10 +17,10 @@ public class FSM_Human : MonoBehaviour
 
     public float duration = 5;
     private float time;
-    private float day = 360.0;
+    private float day = 360.0f;
     public int c = 0;
     private int r;
-    public string state = "vibe";
+    public string state = "Home";
     private Vector2 homeLoc;
     private Vector2 vibeLoc;
     private Vector2 workLoc;
@@ -39,8 +39,7 @@ public class FSM_Human : MonoBehaviour
         if (currentState != null)
             currentState.UpdateLogic();
         time = (clock.timer % 360f);
-        DailyRoutine(timer)
-        
+        DailyRoutine();
     }
 
     void LateUpdate()
@@ -49,18 +48,21 @@ public class FSM_Human : MonoBehaviour
             currentState.UpdatePhysics();
     }
 
-    public IEnumerator DailyRoutine(float vprop, float wprop, float hprop) {
-        float r1 = Random.Range(0.75f, 1.25f);
-        float r2 = Random.Range(0.75f, 1.25f); 
-        float r3 = Random.Range(0.75f, 1.25f);               
+    public IEnumerator DailyRoutine() {
+        float r1 = UnityEngine.Random.Range(0.75f, 1.25f);
+        float r2 = UnityEngine.Random.Range(0.75f, 1.25f); 
+        float r3 = UnityEngine.Random.Range(0.75f, 1.25f);               
         float vprop = (0.125f * r1);
         float hprop = (0.542f * r2);
         float wprop = (0.333f * r3);
         float nmlzr = vprop + hprop + wprop;
-        vprop /= nmlzr; 
-        hprop /= nmlzr; 
-        wprop /= nmlzr;
-        
+        vprop = vprop / nmlzr; 
+        hprop = hprop / nmlzr; 
+        wprop = wprop / nmlzr;
+        //work ~9-5
+        //vibe ~5-8
+
+
         if ((time > 120f) && (state != "Work")) {
             ChangeState(new BaseState("Work", this));
             yield return new WaitForSeconds(5f);
@@ -74,8 +76,8 @@ public class FSM_Human : MonoBehaviour
             yield return new WaitForSeconds(5f);
         }
         else {
-            WaitForSeconds(5f); 
-            DailyRoutine(timer);
+            yield return new WaitForSeconds(5f); 
+            DailyRoutine();
         }
 
     }
