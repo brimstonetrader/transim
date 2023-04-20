@@ -44,6 +44,8 @@ public class TimeClock : MonoBehaviour
         }
     }
 
+
+
     void DisplayTime() 
     {
         if(timer >= 60.0f * 60.0f * 24.0f)
@@ -69,6 +71,10 @@ public class TimeClock : MonoBehaviour
     {
         timerSpeed *= 2.0f;
         print("Speeding UP");
+    }
+
+    public float GetTimer() {
+        return timer;
     }
 
     public void SlowingDown()
