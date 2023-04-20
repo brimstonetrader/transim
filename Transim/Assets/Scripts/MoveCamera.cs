@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MoveCamera : MonoBehaviour
 {
+    private int speed = 10;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -12,11 +14,22 @@ public class MoveCamera : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-    if(Input.GetKeyDown(KeyCode.UpArrow)
-        || Input.GetKeyDown(KeyCode.DownArrow)
-        || Input.GetKeyDown(KeyCode.LeftArrow)
-        || Input.GetKeyDown(KeyCode.RightArrow))
-            Camera.main.transform.Translate (Input.GetAxisRaw("Horizontal")*10,Input.GetAxisRaw("Vertical")*10, 0); 
-    }
+     {
+     if(Input.GetKey(KeyCode.D))
+     {
+         transform.Translate(new Vector3(speed * Time.deltaTime,0,0));
+     }
+     if(Input.GetKey(KeyCode.A))
+     {
+         transform.Translate(new Vector3(-speed * Time.deltaTime,0,0));
+     }
+     if(Input.GetKey(KeyCode.S))
+     {
+         transform.Translate(new Vector3(0,-speed * Time.deltaTime,0));
+     }
+     if(Input.GetKey(KeyCode.W))
+     {
+         transform.Translate(new Vector3(0,speed * Time.deltaTime,0));
+     }
+ }
 }
