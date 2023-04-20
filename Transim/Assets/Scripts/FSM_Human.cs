@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Net.WebSockets;
 using System;
 using System.Collections;
@@ -11,12 +12,18 @@ public class FSM_Human : MonoBehaviour
 {
     public Rigidbody rigidbody;
     public SpriteRenderer spriteRenderer;
+    public TimeClock clock;
     BaseState currentState;
 
     public float duration = 5;
+    private float time;
+    private float day = 360.0;
     public int c = 0;
     private int r;
     public string state = "vibe";
+    private Vector2 homeLoc;
+    private Vector2 vibeLoc;
+    private Vector2 workLoc;
 
 
     void Start()
@@ -24,7 +31,6 @@ public class FSM_Human : MonoBehaviour
         currentState = GetInitialState();
         if (currentState != null)
             currentState.Enter();
-        StartCoroutine(Switch());
     }
 
 
@@ -32,6 +38,9 @@ public class FSM_Human : MonoBehaviour
     {
         if (currentState != null)
             currentState.UpdateLogic();
+        time = (clock.timer % 360f);
+        DailyRoutine(timer)
+        
     }
 
     void LateUpdate()
@@ -40,22 +49,35 @@ public class FSM_Human : MonoBehaviour
             currentState.UpdatePhysics();
     }
 
-    IEnumerator Switch() {
-        print("yes");
-        r = UnityEngine.Random.Range(1, 4);
-        if (r <= 1) {
-            ChangeState(new BaseState("Home", this));
-            yield return new WaitForSeconds(10f);
+    public IEnumerator DailyRoutine(float vprop, float wprop, float hprop) {
+        float r1 = Random.Range(0.75f, 1.25f);
+        float r2 = Random.Range(0.75f, 1.25f); 
+        float r3 = Random.Range(0.75f, 1.25f);               
+        float vprop = (0.125f * r1);
+        float hprop = (0.542f * r2);
+        float wprop = (0.333f * r3);
+        float nmlzr = vprop + hprop + wprop;
+        vprop /= nmlzr; 
+        hprop /= nmlzr; 
+        wprop /= nmlzr;
+        
+        if ((time > 120f) && (state != "Work")) {
+            ChangeState(new BaseState("Work", this));
+            yield return new WaitForSeconds(5f);
         }
-        else if (r <= 2) {
+        else if ((time > 240f) && (state != "Vibe")) {
             ChangeState(new BaseState("Vibe", this));
-            yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(5f);
+        }
+        else if ((time > 285f) && (state != "Home")) {
+            ChangeState(new BaseState("Home", this));
+            yield return new WaitForSeconds(5f);
         }
         else {
-            ChangeState(new BaseState("Work", this));
-            yield return new WaitForSeconds(10f);
+            WaitForSeconds(5f); 
+            DailyRoutine(timer);
         }
-        StartCoroutine(Switch());
+
     }
 
     public void ChangeState(BaseState newState)
@@ -141,9 +163,7 @@ public class Flux : BaseState
   public override void UpdateLogic()
   {
     base.UpdateLogic();
-    if (0 == 2) {
-      stateMachine.ChangeState(_sm.vibeState);
-    }
+    stateMachine.ChangeState(_sm.vibeState);
   }
 
   public override void UpdatePhysics()
