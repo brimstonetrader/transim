@@ -21,9 +21,9 @@ public class FSM_Human : MonoBehaviour
     public int c = 0;
     private int r;
     public string state = "Home";
-    private Vector2 homeLoc;
-    private Vector2 vibeLoc;
-    private Vector2 workLoc;
+    public Vector2 homeLoc;
+    public Vector2 vibeLoc;
+    public Vector2 workLoc;
 
 
     void Start()
@@ -31,6 +31,10 @@ public class FSM_Human : MonoBehaviour
         currentState = GetInitialState();
         if (currentState != null)
             currentState.Enter();
+        workLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,40f));
+        vibeLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,40f));
+        homeLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,40f));
+        DailyUpdate();
     }
 
 
@@ -39,7 +43,6 @@ public class FSM_Human : MonoBehaviour
         if (currentState != null)
             currentState.UpdateLogic();
         time = (clock.timer % 360f);
-        DailyRoutine();
     }
 
     void LateUpdate()
@@ -48,7 +51,7 @@ public class FSM_Human : MonoBehaviour
             currentState.UpdatePhysics();
     }
 
-    public IEnumerator DailyRoutine() {
+    public IEnumerator DailyUpdate() {
         float r1 = UnityEngine.Random.Range(0.75f, 1.25f);
         float r2 = UnityEngine.Random.Range(0.75f, 1.25f); 
         float r3 = UnityEngine.Random.Range(0.75f, 1.25f);               
@@ -59,25 +62,25 @@ public class FSM_Human : MonoBehaviour
         vprop = vprop / nmlzr; 
         hprop = hprop / nmlzr; 
         wprop = wprop / nmlzr;
-        //work ~9-5
-        //vibe ~5-8
+        float hcent = 37.5f;
+        float wcent = 195f;
+        float vcent = 277.5f;
 
 
-        if ((time > 120f) && (state != "Work")) {
+        if ((time > (wcent - (wprop * 180))) && (state != "Work")) {
             ChangeState(new BaseState("Work", this));
             yield return new WaitForSeconds(5f);
         }
-        else if ((time > 240f) && (state != "Vibe")) {
+        else if ((time > (vcent - (vprop * 180))) && (state != "Vibe")) {
             ChangeState(new BaseState("Vibe", this));
             yield return new WaitForSeconds(5f);
         }
-        else if ((time > 285f) && (state != "Home")) {
+        else if ((time > (hcent - (hprop * 180))) && (state != "Vibe")) {
             ChangeState(new BaseState("Home", this));
             yield return new WaitForSeconds(5f);
         }
         else {
             yield return new WaitForSeconds(5f); 
-            DailyRoutine();
         }
 
     }
@@ -85,13 +88,13 @@ public class FSM_Human : MonoBehaviour
     public void ChangeState(BaseState newState)
     {
         if (newState.name == "Home") {
-            StartCoroutine(LerpPosition(new Vector2(0,1), new BaseState("Home", this)));
+            StartCoroutine(LerpPosition(homeLoc, new BaseState("Home", this)));
         }
         if (newState.name == "Work") {
-            StartCoroutine(LerpPosition(new Vector2(1,0), new BaseState("Work", this)));
+            StartCoroutine(LerpPosition(workLoc, new BaseState("Work", this)));
         }
         if (newState.name == "Vibe") {
-            StartCoroutine(LerpPosition(new Vector2(1,-1), new BaseState("Vibe", this)));
+            StartCoroutine(LerpPosition(vibeLoc, new BaseState("Vibe", this)));
         }
     }
 
