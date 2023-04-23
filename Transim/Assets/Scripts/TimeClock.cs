@@ -18,8 +18,8 @@ public class TimeClock : MonoBehaviour
     public Button normal;
 
     private bool isTimer = false;
-    public float timer = 0.0f;
-    private float timerSpeed = 100.0f;
+    public float timer = 0f;
+    public float timerSpeed = 1f;
     [SerializeField]
     private int days = 0;
     private int r = 0;
@@ -35,46 +35,41 @@ public class TimeClock : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        if(isTimer)
+    {    if(isTimer)
         {
             timer += Time.deltaTime * timerSpeed;
             DisplayTime();
             print("Timer Speed" + timerSpeed);
-        }
-    }
-
+        }}
 
 
     void DisplayTime() 
     {
-        if(timer >= 60.0f * 60.0f * 24.0f)
+        if(timer >= 60 * 60 * 24)
         {
-            timer -= 60.0f * 60.0f *24.0f;
+            timer -= 60 * 60 *24;
             days++;
         }
-        int hours = Mathf.FloorToInt(timer / (60.0f * 60.0f));
-        int minutes = Mathf.FloorToInt(timer / 60.0f - hours * 60);
-        int seconds = Mathf.FloorToInt(timer - minutes * 60 - hours * 60.0f * 60.0f);
-        int seconds2 = seconds;
-
+        int hours = Mathf.FloorToInt((float)timer / (60.0f * 60.0f));
+        int minutes = Mathf.FloorToInt((float)timer / 60.0f);
+        int seconds = Mathf.FloorToInt(timer);
         if (hours > 12)
             hours -= 12;
 
-        imageHourHand.transform.localEulerAngles = new Vector3(0,0,hours / 12.0f * -360.0f);
-        imageMinuteHand.transform.localEulerAngles = new Vector3(0,0,minutes / 60.0f * -360.0f);
-        imageSecondHand.transform.localEulerAngles = new Vector3(0,0,seconds / 60.0f * -360.0f);
+        imageHourHand.transform.localEulerAngles = new Vector3(0,0,hours / 12 * -360);
+        imageMinuteHand.transform.localEulerAngles = new Vector3(0,0,minutes / 60 * -360);
+        imageSecondHand.transform.localEulerAngles = new Vector3(0,0,seconds / 60 * -360);
     }
 
 
     public void SpeedingUp()
     {
-        timerSpeed *= 2.0f;
+        timerSpeed *= 2f;
         print("Speeding UP");
     }
 
-    public float GetTimer() {
-        return timer;
+    public int GetTimer() {
+        return Mathf.FloorToInt(timer);
     }
 
     public void SlowingDown()
@@ -82,10 +77,4 @@ public class TimeClock : MonoBehaviour
         timerSpeed *= 0.5f;
         print("Slowing DOWN");
     }
-
-    public void Normal()
-    {
-        print("Normal");
-    }
-
 }

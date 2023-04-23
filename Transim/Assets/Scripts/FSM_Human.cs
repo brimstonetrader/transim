@@ -16,14 +16,20 @@ public class FSM_Human : MonoBehaviour
     BaseState currentState;
 
     public float duration = 5;
-    private float time;
-    private float day = 360.0f;
+    private int time = 0;
+    private int day = 360;
     public int c = 0;
     private int r;
     public string state = "Home";
     public Vector2 homeLoc;
     public Vector2 vibeLoc;
     public Vector2 workLoc;
+    bool worked = false;
+    bool homed = false;
+    bool vibed = false;
+    int vtoh;
+    int htow;
+    int wtovorh;
 
 
     void Start()
@@ -31,18 +37,36 @@ public class FSM_Human : MonoBehaviour
         currentState = GetInitialState();
         if (currentState != null)
             currentState.Enter();
-        workLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,40f));
-        vibeLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,40f));
-        homeLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,40f));
+        workLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,20f));
+        vibeLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,20f));
+        homeLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,20f));
         DailyUpdate();
-    }
+        }
 
 
     void Update()
     {
         if (currentState != null)
             currentState.UpdateLogic();
-        time = (clock.timer % 360f);
+        time = clock.GetTimer() % 360;
+        if (time == 0) {
+            DailyUpdate();
+        }
+        
+        if ((time > htow) && (state != "Work") && (!worked)) {
+            worked = true;
+            ChangeState(new BaseState("Work", this));
+        }
+        else if ((time > wtovorh+htow) && (state != "Vibe") && (!vibed)) {
+            vibed = true;
+            ChangeState(new BaseState("Vibe", this));
+        }
+        else if ((time > vtoh+wtovorh+htow) && (state != "Home") && (!homed)) {
+            homed = true;
+            ChangeState(new BaseState("Home", this));
+        }
+
+        
     }
 
     void LateUpdate()
@@ -51,39 +75,15 @@ public class FSM_Human : MonoBehaviour
             currentState.UpdatePhysics();
     }
 
-    public IEnumerator DailyUpdate() {
-        float r1 = UnityEngine.Random.Range(0.75f, 1.25f);
-        float r2 = UnityEngine.Random.Range(0.75f, 1.25f); 
-        float r3 = UnityEngine.Random.Range(0.75f, 1.25f);               
-        float vprop = (0.125f * r1);
-        float hprop = (0.542f * r2);
-        float wprop = (0.333f * r3);
-        float nmlzr = vprop + hprop + wprop;
-        vprop = vprop / nmlzr; 
-        hprop = hprop / nmlzr; 
-        wprop = wprop / nmlzr;
-        float hcent = 37.5f;
-        float wcent = 195f;
-        float vcent = 277.5f;
-
-
-        if ((time > (wcent - (wprop * 180))) && (state != "Work")) {
-            ChangeState(new BaseState("Work", this));
-            yield return new WaitForSeconds(5f);
+    public IEnumerator DailyUpdate() {           
+        htow     = UnityEngine.Random.Range(110, 130);
+        wtovorh  = UnityEngine.Random.Range(230, 250);
+        vtoh     = UnityEngine.Random.Range(260, 280);
+        worked   = false;
+        homed    = false;
+        vibed    = false;
+        yield return new WaitForSeconds(0.1f);
         }
-        else if ((time > (vcent - (vprop * 180))) && (state != "Vibe")) {
-            ChangeState(new BaseState("Vibe", this));
-            yield return new WaitForSeconds(5f);
-        }
-        else if ((time > (hcent - (hprop * 180))) && (state != "Vibe")) {
-            ChangeState(new BaseState("Home", this));
-            yield return new WaitForSeconds(5f);
-        }
-        else {
-            yield return new WaitForSeconds(5f); 
-        }
-
-    }
 
     public void ChangeState(BaseState newState)
     {
@@ -128,7 +128,7 @@ public class FSM_Human : MonoBehaviour
 
     protected virtual BaseState GetInitialState()
     {
-        return new BaseState("Vibe", this);
+        return new BaseState("Flux", this);
     }
 
     private void OnGUI()

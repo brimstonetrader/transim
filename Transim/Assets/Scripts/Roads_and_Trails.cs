@@ -12,8 +12,8 @@ public class Roads_and_Trails : MonoBehaviour
     private Vector3 _dragOffset;
     private Camera _cam;
     public Tilemap tilemap;
-    public Tile road;
-    public Tile trail;
+    public TileBase road;
+    public TileBase trail;
 
     void Awake() 
     {
