@@ -14,28 +14,22 @@ public class MoveCamera : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-    if(Input.GetKeyDown(KeyCode.UpArrow)
-        || Input.GetKeyDown(KeyCode.DownArrow)
-        || Input.GetKeyDown(KeyCode.LeftArrow)
-        || Input.GetKeyDown(KeyCode.RightArrow))
-            Camera.main.transform.Translate (Input.GetAxisRaw("Horizontal")*10,Input.GetAxisRaw("Vertical")*10, 0); 
-    }
-    
-    
-    IEnumerator LerpPosition(Vector2 targetPosition, BaseState newState)
-    {
-        float time = 0;
-        float duration = 1;
-        Vector2 startPosition = transform.position;
-        while (time < duration)
-        {
-            transform.position = Vector2.Lerp(startPosition, targetPosition, time / duration);
-            time += Time.deltaTime;
-            yield return null;
-        }
-        transform.position = targetPosition;
-        
-    }
-
+     {
+     if(Input.GetKey(KeyCode.D) | Input.GetKey(KeyCode.RightArrow))
+     {
+         transform.Translate(new Vector3(speed * Time.deltaTime,0,0));
+     }
+     if(Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.LeftArrow))
+     {
+         transform.Translate(new Vector3(-speed * Time.deltaTime,0,0));
+     }
+     if(Input.GetKey(KeyCode.S) | Input.GetKey(KeyCode.DownArrow))
+     {
+         transform.Translate(new Vector3(0,-speed * Time.deltaTime,0));
+     }
+     if(Input.GetKey(KeyCode.W) | Input.GetKey(KeyCode.UpArrow))
+     {
+         transform.Translate(new Vector3(0,speed * Time.deltaTime,0));
+     }
+ }
 }
