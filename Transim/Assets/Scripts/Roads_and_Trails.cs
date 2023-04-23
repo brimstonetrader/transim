@@ -20,18 +20,20 @@ public class Roads_and_Trails : MonoBehaviour
         _cam = Camera.main;
     }
 
-    void onMouseDown() 
+    void Update()
     {
-        _dragOffset = transform.position - GetMousePos();
-        if(Input.GetKey(KeyCode.Mouse0))
-         {
-             tilemap.SetTile(Intizer(GetMousePos()), road);   
-         }
-         if(Input.GetKey(KeyCode.Mouse1))
-         {
-             tilemap.SetTile(Intizer(GetMousePos()), trail);   
-         }
-    }
+    if(Input.GetMouseButtonDown(0))
+        {
+        print(Intizer(GetMousePos()));
+        tilemap.SetTile(Intizer(GetMousePos()), road);   
+        }
+    if(Input.GetMouseButtonDown(1))
+        {
+        print(Intizer(GetMousePos()));
+        tilemap.SetTile(Intizer(GetMousePos()), trail);   
+        }
+    }    
+
     
     void OnMouseDrag() 
     {
@@ -46,9 +48,8 @@ public class Roads_and_Trails : MonoBehaviour
     }
 
     Vector3Int Intizer(Vector3 floatnasty) {
-        float someFloat = 42.7f;
-        int xi = (int)Math.Round(floatnasty.x); 
-        int yi = (int)Math.Round(floatnasty.y); 
+        int xi = (int)Math.Round(floatnasty.x * 136/65); 
+        int yi = (int)Math.Round(floatnasty.y * 92/45); 
         int zi = (int)Math.Round(floatnasty.z); 
         return (new Vector3Int (xi,yi,zi));
     }
