@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Console;
 using UnityEngine;
 
 // This is a refrence to Drag and Drop in Unity - 2021 Tutorial 
@@ -9,6 +10,9 @@ public class Dragger: MonoBehaviour
 {
     private Vector3 _dragOffset;
     private Camera _cam;
+
+    public List<Vector3> locations = new List<Vector3>();
+
 
     void Awake() 
     {
@@ -29,6 +33,8 @@ public class Dragger: MonoBehaviour
     {
         var mousePos = _cam.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
+        locations.Add(mousePos);
         return mousePos;
     }
+
 }
