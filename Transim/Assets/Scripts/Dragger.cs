@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Console;
 using UnityEngine;
 
 // This is a refrence to Drag and Drop in Unity - 2021 Tutorial 
