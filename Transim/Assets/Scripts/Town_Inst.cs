@@ -4,28 +4,26 @@ using UnityEngine;
 
 public class Town_Inst : MonoBehaviour
 {
-    public int gridX = 67;
-    public int gridY = 46;
-    public Tile tilePrefab;
+    int gxmin  = -67;
+    int gxmax  = 68;
+    int gymin  = -54;
+    int gymax  = 37;
+    public Tile Home;
+    public Tile Work;
+    public Tile Vibe;        
 
     void Start() {
         SetGrid();
     }
 
     public void SetGrid() {
-        int total = gridX * gridY;
-
+        int total = (gxmax-gxmin) * (gymax-gymin);
+        List<int> randcoords = new List<int>() {UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax),UnityEngine.Random.Range(gxmin, gxmax),UnityEngine.Random.Range(gymin, gymax)};
         for(int i = 0; i < total; i++) {
-            int posX = (int)Mathf.Floor(i/gridX);
-            int posY = i % gridY;
+            int posX = (int)Mathf.Floor(i/(gxmax-gxmin));
+            int posY = i % (gymax-gymin);
 
-            Tile t = Instantiate(tilePrefab).GetComponent<Tile>();
-            t.SetPosition(posX, posY);
 
-            if((posX + posY) % 2 == 0)
-                t.SetColor(Color.blue);
-            else
-                t.SetColor(Color.red);
         }
     }
 }

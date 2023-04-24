@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 //Given our analog clock, we will scale a day into six minutes. 
 //Big ups to https://medium.com/c-sharp-progarmming/make-a-basic-fsm-in-unity-c-f7d9db965134
@@ -12,24 +13,26 @@ public class FSM_Human : MonoBehaviour
 {
     public Rigidbody rigidbody;
     public SpriteRenderer spriteRenderer;
+    public NavMeshAgent agent;
     public TimeClock clock;
     BaseState currentState;
 
-    public float duration = 5;
-    private int time = 0;
-    private int day = 360;
+    public float lerpduration = 5;
+    public int timer = 0;
+    public int days = 0;
+    private int daylength = 360;
     public int c = 0;
     private int r;
     public string state = "Home";
-    public Vector2 homeLoc;
-    public Vector2 vibeLoc;
-    public Vector2 workLoc;
+    public Vector3 homeLoc;
+    public Vector3 vibeLoc;
+    public Vector3 workLoc;
     bool worked = false;
     bool homed = false;
     bool vibed = false;
-    int vtoh;
-    int htow;
-    int wtovorh;
+    int vtoh=100;
+    int htow=200;
+    int wtovorh=300;
 
 
     void Start()
@@ -37,32 +40,38 @@ public class FSM_Human : MonoBehaviour
         currentState = GetInitialState();
         if (currentState != null)
             currentState.Enter();
-        workLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,20f));
-        vibeLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,20f));
-        homeLoc = new Vector2 (UnityEngine.Random.Range(-25f,20f), UnityEngine.Random.Range(-25f,20f));
         DailyUpdate();
+        Timekeeper();
         }
+
+    IEnumerator Timekeeper() {
+        if (timer > daylength-1) {
+            DailyUpdate();
+        }
+        timer = clock.GetTimer() % daylength;
+        yield return new WaitForSeconds(0.5f);
+        Timekeeper();
+        
+    }
 
 
     void Update()
     {
         if (currentState != null)
             currentState.UpdateLogic();
-        time = clock.GetTimer() % 360;
-        if (time == 0) {
-            DailyUpdate();
-        }
-        
-        if ((time > htow) && (state != "Work") && (!worked)) {
+        if ((timer > htow) && (!worked)) {
             worked = true;
+            state = "Work";
             ChangeState(new BaseState("Work", this));
         }
-        else if ((time > wtovorh+htow) && (state != "Vibe") && (!vibed)) {
+        else if ((timer > wtovorh+htow) &&(!vibed) && worked){
             vibed = true;
+            state = "Vibe";
             ChangeState(new BaseState("Vibe", this));
         }
-        else if ((time > vtoh+wtovorh+htow) && (state != "Home") && (!homed)) {
+        else if ((timer > vtoh+wtovorh+htow) && (!homed) && worked && vibed) {
             homed = true;
+            state = "Home";
             ChangeState(new BaseState("Home", this));
         }
 
@@ -76,54 +85,38 @@ public class FSM_Human : MonoBehaviour
     }
 
     public IEnumerator DailyUpdate() {           
+        days++;
         htow     = UnityEngine.Random.Range(110, 130);
         wtovorh  = UnityEngine.Random.Range(230, 250);
         vtoh     = UnityEngine.Random.Range(260, 280);
         worked   = false;
         homed    = false;
-        vibed    = false;
+        vibed    = true;
+        if (UnityEngine.Random.Range(0, 100) < 70) {vibed = false;}
+                                                        
         yield return new WaitForSeconds(0.1f);
         }
 
     public void ChangeState(BaseState newState)
     {
-        if (newState.name == "Home") {
-            StartCoroutine(LerpPosition(homeLoc, new BaseState("Home", this)));
-        }
-        if (newState.name == "Work") {
-            StartCoroutine(LerpPosition(workLoc, new BaseState("Work", this)));
-        }
-        if (newState.name == "Vibe") {
-            StartCoroutine(LerpPosition(vibeLoc, new BaseState("Vibe", this)));
-        }
-    }
-
-    IEnumerator LerpPosition(Vector2 targetPosition, BaseState newState)
-    {
-        float time = 0;
-        Vector2 startPosition = transform.position;
+        if      (newState.name == "Home") {agent.destination = homeLoc;}
+        else if (newState.name == "Work") {agent.destination = workLoc;}
+        else if (newState.name == "Vibe") {agent.destination = vibeLoc;}
+        
         currentState.Exit();
         currentState = new BaseState("Flux", this);
         state = "Flux";
         spriteRenderer.color = Color.black;
         currentState.Enter();
-        while (time < duration)
-        {
-            transform.position = Vector2.Lerp(startPosition, targetPosition, time / duration);
-            time += Time.deltaTime;
-            yield return null;
-        }
-        transform.position = targetPosition;
+        
         currentState.Exit();
         currentState = new BaseState(newState.name, this);
         state = newState.name;
-        if (state=="Work") {spriteRenderer.color = Color.red;}
-        if (state=="Home") {spriteRenderer.color = Color.blue;}
-        if (state=="Vibe") {spriteRenderer.color = Color.yellow;}        
+        if      (state=="Work") {spriteRenderer.color = Color.red;}
+        else if (state=="Home") {spriteRenderer.color = Color.blue;}
+        else if (state=="Vibe") {spriteRenderer.color = Color.green;}        
         currentState.Enter();
-
-        
-    }
+   }
 
 
     protected virtual BaseState GetInitialState()
@@ -133,7 +126,8 @@ public class FSM_Human : MonoBehaviour
 
     private void OnGUI()
     {
-        string content = currentState != null ? currentState.name : "";
+        string content = currentState != null ? currentState.name + "time: " + timer.ToString() + " days: " + days.ToString(): "";
+        //string content = currentState != null ? currentState.name + "time: " + timer.ToString() + " days: " + days.ToString();
         GUILayout.Label($"<color='black'><size=40>{content}</size></color>");
     }
 }
@@ -218,7 +212,6 @@ public class Work : BaseState
 public class Home : BaseState
 {
     private FSM_Trans _sm;
-    public float time;
 
     public Home(FSM_Trans stateMachine) : base("Home", stateMachine) {
       _sm = stateMachine;
@@ -228,10 +221,6 @@ public class Home : BaseState
     public override void UpdateLogic()
     {
         base.UpdateLogic();
-        time = 0;
-        if ((time % 360) == 120) {
-            stateMachine.ChangeState(_sm.fluxState);
-        }
     }
     public override void Enter()
     {

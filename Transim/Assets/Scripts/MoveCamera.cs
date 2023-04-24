@@ -5,6 +5,7 @@ using UnityEngine;
 public class MoveCamera : MonoBehaviour
 {
     private int speed = 10;
+    public Camera camera;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +31,14 @@ public class MoveCamera : MonoBehaviour
      if(Input.GetKey(KeyCode.W) | Input.GetKey(KeyCode.UpArrow))
      {
          transform.Translate(new Vector3(0,speed * Time.deltaTime,0));
+     }
+     if(Input.GetKey(KeyCode.Z))
+     {
+         camera.fieldOfView *= 1.002f;
+     }
+     if(Input.GetKey(KeyCode.X))
+     {
+         camera.fieldOfView *= 0.998f;
      }
  }
 }
